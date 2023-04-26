@@ -1,21 +1,26 @@
-import numpy as np
 import tkinter as tk
-
+import numpy as np
 class Linea:
-    def dibujar(self, x1, y1, x2, y2):
-        dx = abs(x2 - x1)
-        dy = abs(y2 - y1)
-        sx = 1 if x1 < x2 else -1
-        sy = 1 if y1 < y2 else -1
+    def __init__(self, x1, y1, x2, y2):
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+
+    def dibujar(self):
+        dx = abs(self.x2 - self.x1)
+        dy = abs(self.y2 - self.y1)
+        sx = 1 if self.x1 < self.x2 else -1
+        sy = 1 if self.y1 < self.y2 else -1
         err = dx - dy
-        x = x1
-        y = y1
+        x = self.x1
+        y = self.y1
 
         # Matriz para almacenar las coordenadas de cada pixel
         coords = np.zeros((2, dx + dy), dtype=int)
         idx = 0
 
-        while x != x2 or y != y2:
+        while x != self.x2 or y != self.y2:
             coords[0, idx] = x
             coords[1, idx] = y
             idx += 1
@@ -36,83 +41,42 @@ class Linea:
         # Devolver la matriz de coordenadas
         return coords[:, :idx]
 
-    def cambiarLongitud(self, x1, y1, x2, y2):
-        dx = abs(x2 - x1)
-        dy = abs(y2 - y1)
-        sx = 1 if x1 < x2 else -1
-        sy = 1 if y1 < y2 else -1
-        err = dx - dy
-        x = x1
-        y = y1
+    def cambiarLongitud(self):
+        # Aumentar la longitud de la línea en 1 píxel en ambos extremos
+        if self.x1 < self.x2:
+            self.x1 -= 1
+            self.x2 += 1
+        else:
+            self.x1 += 1
+            self.x2 -= 1
 
-        # Crear una matriz temporal más grande
-        coords_temp = np.zeros((2, 2*(dx + dy)), dtype=int)
-        idx = 0
+        if self.y1 < self.y2:
+            self.y1 -= 1
+            self.y2 += 1
+        else:
+            self.y1 += 1
+            self.y2 -= 1
 
-        while x != x2 or y != y2:
-            coords_temp[0, idx] = x
-            coords_temp[1, idx] = y
-            idx += 1
+        # Actualizar los atributos con las nuevas coordenadas de los extremos de la línea
+        self.x1 = max(0, self.x1)
+        self.y1 = max(0, self.y1)
+        self.x2 = max(0, self.x2)
+        self.y2 = max(0, self.y2)
 
-            e2 = 2 * err
-            if e2 > -dy:
-                err -= dy
-                x += sx
-            if e2 < dx:
-                err += dx
-                y += sy
-
-        # Agregar las coordenadas del último pixel
-        coords_temp[0, idx] = x
-        coords_temp[1, idx] = y
-        idx += 1
-
-        # Copiar los valores de la matriz más pequeña en la matriz temporal
-        coords = np.zeros((2, idx), dtype=int)
-        coords[:, :idx] = coords_temp[:, :idx]
-
-        # Devolver la matriz de coordenadas
-        return coords
-
+        # Actualizar la matriz de coordenadas con las nuevas coordenadas de la línea
+        return self.dibujar()
 
 
 #matriz de dibujar
-linea = Linea()
-coordenadasDibujo=linea.dibujar(50,50,100,100)
+linea = Linea(50,20,145,100)
+coordenadasDibujo=linea.dibujar()
 print(coordenadasDibujo)
-#matriz que aumento o disminuye
-nuevasCoordenadas = linea.cambiarLongitud(25,25,90,90)
+#matriz que aumenta el tamanio cada que se llama al metodo cambiarLongitud()
+print("Coordenadas modificadas para aumentar la longitud")
+nuevasCoordenadas = linea.cambiarLongitud()
+print(nuevasCoordenadas)
+nuevasCoordenadas = linea.cambiarLongitud()
 print(nuevasCoordenadas)
 
 
 
-
-
-
-#lo de abajo es para probar nomas como se ve en la garfica, funciona
-""" 
- #Crear una ventana y un lienzo
-ventana = tk.Tk()
-canvas = tk.Canvas(ventana, width=300, height=300)
-canvas.pack()
-
-# Crear la línea y obtener las coordenadas
-linea = Linea()
-coords = linea.dibujar(25,25,200,200)
-print(coords)
-
-# Dibujar la línea en el lienzo
-for i in range(len(coords[0])-1):
-    canvas.create_line(coords[0, i], coords[1, i], coords[0, i+1], coords[1, i+1], width=2, fill='black')
-
-# Aumentar la línea y actualizar el dibujo en el lienzo
-canvas.delete("all") # Borrar todo lo que hay en el lienzo
-
-
-coordsAumentado = linea.cambiarLongitud(10, 10, 50, 50)
-for i in range(len(coordsAumentado[0])-1):
-            canvas.create_line(coordsAumentado[0, i], coordsAumentado[1, i], coordsAumentado[0, i+1], coordsAumentado[1, i+1], width=2, fill='black')
-print (coordsAumentado)
- 
-# Mostrar la ventana
-ventana.mainloop() """
