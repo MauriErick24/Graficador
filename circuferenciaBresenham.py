@@ -18,22 +18,25 @@ class circuferencia:
         while(xi<=yi):
             if(contador==separado):
                 print(xi,yi)
-                self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy))
-                self.listaPuntosBorde.append((yi+puntomediox,xi+puntomedioy))
+                for tlm in range(grosor):
+                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy-tlm))
+                    self.listaPuntosBorde.append((yi+puntomediox-tlm,xi+puntomedioy))
                 xi=-xi
-                self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy))
-                self.listaPuntosBorde.append((yi+puntomediox,xi+puntomedioy))
-                xi=-xi
-                yi=-yi
-                self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy))
-                self.listaPuntosBorde.append((yi+puntomediox,xi+puntomedioy))
-                xi=-xi
-                self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy))
-                self.listaPuntosBorde.append((yi+puntomediox,xi+puntomedioy))
+                for tlm in range(grosor):
+                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy-tlm))
+                    self.listaPuntosBorde.append((yi+puntomediox-tlm,xi+puntomedioy))
                 xi=-xi
                 yi=-yi
-                self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy))
-                self.listaPuntosBorde.append((yi+puntomediox,xi+puntomedioy))
+                for tlm in range(grosor):
+                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy+tlm))
+                    self.listaPuntosBorde.append((yi+puntomediox+tlm,xi+puntomedioy))
+                xi=-xi
+                for tlm in range(grosor):
+                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy+tlm))
+                    self.listaPuntosBorde.append((yi+puntomediox+tlm,xi+puntomedioy))
+                xi=-xi
+                yi=-yi
+                
                 contador=1
             else:
                 contador+=1;
@@ -67,7 +70,7 @@ class circuferencia:
         cv2.destroyAllWindows()
     
                 
-nc=circuferencia(100,50,100,100,1,1)
+nc=circuferencia(100,50,100,200,2,1)
 print()
 #print(nc.getPoints())
 nc.pintar(200)
