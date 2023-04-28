@@ -17,7 +17,7 @@ class circuferencia:
         contador=separado
         while(xi<=yi):
             if(contador==separado):
-                print(xi,yi)
+                
                 for tlm in range(grosor):
                     self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy-tlm))
                     self.listaPuntosBorde.append((yi+puntomediox-tlm,xi+puntomedioy))
@@ -49,10 +49,7 @@ class circuferencia:
                 p0=p0+2*xi+2+1-(2*yi-2)
                 xi=xi+1
                 yi=yi-1
-            if(falck):
-                print(self.listaPuntosBorde) 
-                print(puntomediox,puntomedioy,radio)
-                falck=False
+            
     def getPoints(self):
         return self.listaPuntosBorde
     def pintar(self,tam):
@@ -62,7 +59,7 @@ class circuferencia:
         
         for pl in self.listaPuntosBorde:
             x,y=pl
-            print(x,y)
+            #print(x,y)
             matrizCircula[x][y]=color
             
         cv2.imshow('imgCircuferencia',matrizCircula)
@@ -70,7 +67,7 @@ class circuferencia:
         cv2.destroyAllWindows()
     
                 
-nc=circuferencia(100,50,100,200,2,1)
+nc=circuferencia(100,50,100,200,1,2)
 print()
 #print(nc.getPoints())
-nc.pintar(200)
+#nc.pintar(200)
