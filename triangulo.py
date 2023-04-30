@@ -15,25 +15,59 @@ class Triangulo:
         altura = int(lado * (3 ** 0.5) / 2)
         x3 = self.x1 + int(lado / 2)
         y3 = self.y1 + altura
-
-        total_puntos = lado + 1
-        residuo = total_puntos % 3
-        puntos_por_lado = total_puntos // 3
         
-        puntos1_x = np.linspace(self.x1, self.x2, num=puntos_por_lado+residuo, dtype=int)
-        puntos1_y = np.linspace(self.y1, self.y2, num=puntos_por_lado+residuo, dtype=int)
-
-        puntos2_x = np.linspace(self.x2, x3, num=puntos_por_lado, dtype=int)
-        puntos2_y = np.linspace(self.y2, y3, num=puntos_por_lado, dtype=int)
-
-        puntos3_x = np.linspace(x3, self.x1, num=puntos_por_lado, dtype=int)
-        puntos3_y = np.linspace(y3, self.y1, num=puntos_por_lado, dtype=int)
+        # Obtener las coordenadas de los puntos intermedios
+        puntos1_x, puntos1_y = self.linea_simple(self.x1, self.y1, self.x2, self.y2)
+        puntos2_x, puntos2_y = self.linea_simple(self.x2, self.y2, x3, y3)
+        puntos3_x, puntos3_y = self.linea_simple(x3, y3, self.x1, self.y1)
 
         coords = [(puntos1_x[i], puntos1_y[i]) for i in range(len(puntos1_x))]
         coords += [(puntos2_x[i], puntos2_y[i]) for i in range(len(puntos2_x))]
         coords += [(puntos3_x[i], puntos3_y[i]) for i in range(len(puntos3_x))]
         
         return coords
+    
+    def linea_simple(self, x1, y1, x2, y2):
+        # Implementación del algoritmo de línea simple
+        puntos_x = []
+        puntos_y = []
+        if x1 == x2:
+            # Línea vertical
+            if y1 > y2:
+                y1, y2 = y2, y1
+            for y in range(y1, y2 + 1):
+                puntos_x.append(x1)
+                puntos_y.append(y)
+        elif y1 == y2:
+            # Línea horizontal
+            if x1 > x2:
+                x1, x2 = x2, x1
+            for x in range(x1, x2 + 1):
+                puntos_x.append(x)
+                puntos_y.append(y1)
+        else:
+            # Línea con pendiente
+            m = (y2 - y1) / (x2 - x1)
+            if abs(m) <= 1:
+                if x1 > x2:
+                    x1, x2 = x2, x1
+                    y1, y2 = y2, y1
+                y = y1
+                for x in range(x1, x2 + 1):
+                    puntos_x.append(x)
+                    puntos_y.append(int(y))
+                    y += m
+            else:
+                if y1 > y2:
+                    x1, x2 = x2, x1
+                    y1, y2 = y2, y1
+                x = x1
+                for y in range(y1, y2 + 1):
+                    puntos_x.append(int(x))
+                    puntos_y.append(y)
+                    x += 1 / m
+
+        return puntos_x, puntos_y
 
     
     def aumentar(self):
@@ -48,9 +82,9 @@ class Triangulo:
         self.x2 -= 1
         self.y2 -= 1
 
-#Los puntos para usar create_polygon no se pasa en matricez, no pudo usar la linea
+#Los puntos para usar create_polygon no se pasa en matricez
 # Crear un objeto Triangulo con las coordenadas de dos vértices opuestos
-triangulo = Triangulo(90, 90, 200, 100)
+triangulo = Triangulo(90, 90, 200, 200)
 
 # Obtener las coordenadas del triángulo equilátero
 coords = triangulo.dibujar()
