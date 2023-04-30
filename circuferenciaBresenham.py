@@ -27,25 +27,35 @@ class circuferencia:
         contador=separado
         self.iniciox=puntomediox-radio
         self.finx=puntomediox+radio
+        parta=[]
+        partb=[]
+        partc=[]
+        partd=[]
+        parte=[]
+        partf=[]
+        partg=[]
+        parth=[]
+        
+        
         while(xi<=yi):
             if(contador==separado):
                 
                 for tlm in range(groso):
-                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy-tlm))
-                    self.listaPuntosBorde.append((yi+puntomediox-tlm,xi+puntomedioy))
+                    parta.append((xi+puntomediox,yi+puntomedioy-tlm))
+                    partb.append((yi+puntomediox-tlm,xi+puntomedioy))
                 xi=-xi
                 for tlm in range(groso):
-                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy-tlm))
-                    self.listaPuntosBorde.append((yi+puntomediox-tlm,xi+puntomedioy))
+                    partc.append((xi+puntomediox,yi+puntomedioy-tlm))
+                    partd.append((yi+puntomediox-tlm,xi+puntomedioy))
                 xi=-xi
                 yi=-yi
                 for tlm in range(groso):
-                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy+tlm))
-                    self.listaPuntosBorde.append((yi+puntomediox+tlm,xi+puntomedioy))
+                    parte.append((xi+puntomediox,yi+puntomedioy+tlm))
+                    partf.append((yi+puntomediox+tlm,xi+puntomedioy))
                 xi=-xi
                 for tlm in range(groso):
-                    self.listaPuntosBorde.append((xi+puntomediox,yi+puntomedioy+tlm))
-                    self.listaPuntosBorde.append((yi+puntomediox+tlm,xi+puntomedioy))
+                    partg.append((xi+puntomediox,yi+puntomedioy+tlm))
+                    parth.append((yi+puntomediox+tlm,xi+puntomedioy))
                 xi=-xi
                 yi=-yi
                 
@@ -61,7 +71,12 @@ class circuferencia:
                 p0=p0+2*xi+2+1-(2*yi-2)
                 xi=xi+1
                 yi=yi-1
-            
+        partb.reverse()
+        partc.reverse()
+        parte.reverse()
+        parth.reverse()
+        
+        self.listaPuntosBorde=partc+parta+partb+partd+parte+partg+parth+partf
     def getPoints(self):
         return self.listaPuntosBorde
     def pintarScanLine(self):
@@ -113,9 +128,10 @@ class circuferencia:
             self.matrizCircuferencia[x][y]=color
     
                 
-nc=circuferencia(100,50,100,250,7,4)
+nc=circuferencia(100,50,100,100,1,1)
 print()
 #print(nc.getPoints())
-nc.pintar()
-nc.pintarScanLine();
-nc.pintar()
+#nc.pintar()
+print(nc.getPoints())
+#nc.pintarScanLine();
+#nc.pintar()
