@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import linea
+import triangulo
 
 class PaintApp:
     global canvas 
@@ -9,6 +10,7 @@ class PaintApp:
     global painting
     global master
     global line
+    global selection 
 
     def __init__(self, master):
         self.master = master
@@ -16,6 +18,7 @@ class PaintApp:
         self.flag = 0
         self.painting = 0
         self.line = 0
+        self.selection = 0
         # Frame para botones
         self.button_frame = tk.Frame(master)
         self.button_frame.pack(side="top", fill="x", padx=10, pady=10)
@@ -23,14 +26,14 @@ class PaintApp:
         # Botones para herramientas de dibujo
         # self.line_button = tk.Button(self.button_frame, text="Línea", command=self.draw_line)
         # self.line_button.pack(side="left", padx=5)
-        self.line_button = tk.Button(self.button_frame, text="Línea",command=self.button_click)
+        self.line_button = tk.Button(self.button_frame, text="Línea",command=self.button_click_line)
         self.line_button.pack(side="left", padx=5)
         
         self.square_button = tk.Button(self.button_frame, text="Cuadrado", command=self.draw_square)
         self.square_button.pack(side="left", padx=5)
         self.circle_button = tk.Button(self.button_frame, text="Círculo", command=self.draw_circle)
         self.circle_button.pack(side="left", padx=5)
-        self.triangle_button = tk.Button(self.button_frame, text="Triángulo", command=self.draw_triangle)
+        self.triangle_button = tk.Button(self.button_frame, text="Triángulo", command=self.button_click_triangle)
         self.triangle_button.pack(side="left", padx=5)
         self.curve_button = tk.Button(self.button_frame, text="Puntero", command=self.button_stop)
         self.curve_button.pack(side="left", padx=5)
@@ -62,17 +65,11 @@ class PaintApp:
         self.canvas.pack(side="bottom", fill="both", expand=True, padx=10, pady=10)
         master.bind("<s>", self.key_press)
 
-    
-    def button_click(self):
-         self.canvas.bind("<Button-1>", self.canvas_click)
+ ############################ Linea ##############################################   
+    def button_click_line(self):
+         self.canvas.bind("<Button-1>", self.canvas_click_line)
 
-    def button_stop(self):
-        self.canvas.bind("<Button-1>", self.draw_stop)
-        pass
-    def draw_stop(self,event):
-        pass
-
-    def canvas_click(self, event):
+    def canvas_click_line(self, event):
        if(self.flag == 0):
             self.x1 = event.x
             self.y1 = event.y
@@ -90,16 +87,38 @@ class PaintApp:
         self.line = linea.Linea(self.x1,self.y1,self.x2,self.y2)
         pointLines = self.line.dibujar()
         for i in range(len(pointLines[0])):
-                #elemento = pointLines[i][j]            # Accedemos al elemento de la matriz en la posición (i,j)
-
             print("Coordenadas x, y: ({}, {})".format(pointLines[0][i], pointLines[1][i]))
             cordx = pointLines[0][i]
             cordy = pointLines[1][i]
             self.canvas.create_rectangle(cordx, cordy, cordx+1, cordy+1, fill="black")
-                #print("poss: ({},{})".format(pointLines[0,0], pointLines[0,1]))
-                #print("Coordenadas 2 del clic: ({}, {})".format(self.x2, self.y2))
-                #print(elemento)
-        #print(pointLines)
+#############################################################################################
+
+ ############################ Linea ##############################################   
+    def button_click_triangle(self):
+         self.canvas.bind("<Button-1>", self.canvas_click_triangle)
+
+    def canvas_click_triangle(self, event):
+       if(self.flag == 0):
+            self.x1 = event.x
+            self.y1 = event.y
+            print("Coordenadas 1 del clic: ({}, {})".format(self.x1, self.y1))
+            self.flag = 1
+       elif(self.flag == 1):   
+            self.x2 = event.x
+            self.y2 = event.y
+            print("Coordenadas 2 del clic: ({}, {})".format(self.x2, self.y2))
+            self.flag = 0
+            self.draw_triangle()
+
+    def draw_triangle(self):
+        self.painting = 1
+       
+        triangle = triangulo.Triangulo(self.x1,self.y1,self.x2,self.y2)
+        points = triangle.dibujar()
+        self.canvas.create_polygon(points, outline='black', fill='')
+
+#############################################################################################
+
 
         pass
     def draw_square(self):
@@ -108,8 +127,8 @@ class PaintApp:
     def draw_circle(self):
         pass
 
-    def draw_triangle(self):
-        pass
+    # def draw_triangle(self):
+    #     pass
 
     def draw_curve(self):
         pass
@@ -121,6 +140,18 @@ class PaintApp:
 
     def choose_color(self):
         pass
+
+
+############## detener listener #############################
+    def button_stop(self):
+        self.canvas.bind("<Button-1>", self.draw_stop)
+        pass
+    
+    def draw_stop(self,event):
+        pass
+###############################################################
+
+
 
     def key_press(self,event):
         if(self.painting == 1):
