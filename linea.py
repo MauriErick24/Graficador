@@ -1,4 +1,4 @@
-import tkinter as tk
+
 import numpy as np
 class Linea:
     def __init__(self, x1, y1, x2, y2):
