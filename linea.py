@@ -40,38 +40,85 @@ class Linea:
         return np.array(coords).T
 
     def aumentarLongitud(self):
-        if self.x2 - self.x1 > 0:
-            # Línea diagonal hacia abajo desde el lado izquierdo
-            m = (self.y2 - self.y1) / (self.x2 - self.x1)
-            b = self.y1 - m * self.x1
-            nuevo_x2 = self.x2 + 1
-            nuevo_y2 = m * nuevo_x2 + b
-            nuevo_x1 = self.x1 - 1            
-            nuevo_y1 = m * nuevo_x1 + b
+        # Verificar la pendiente de la línea
+        if self.x2 == self.x1:
+            m = 0
         else:
-            # Línea diagonal hacia arriba desde el lado izquierdo
-            m = (self.y1 - self.y2) / (self.x1 - self.x2)
-            b = self.y1 - m * self.x1
-            nuevo_x2 = self.x2 - 1
-            nuevo_y2 = m * nuevo_x2 + b
-            nuevo_x1 = self.x1 + 1            
-            nuevo_y1 = m * nuevo_x1 + b
-        
+            m = (self.y2 - self.y1) / (self.x2 - self.x1)
+
+        # Verificar la dirección de la línea
+        if self.x1 < self.x2:
+            # Línea diagonal hacia arriba a la derecha
+            if m < 0 and self.y1 > self.y2:
+                nuevo_x2 = self.x2 + 1
+                nuevo_y2 = self.y2 - 1
+                nuevo_x1 = self.x1 - 1
+                nuevo_y1 = self.y1 + 1
+            # Línea diagonal hacia abajo a la derecha
+            else:
+                nuevo_x2 = self.x2 + 1
+                nuevo_y2 = int(round(self.y2 + m))
+                nuevo_x1 = self.x1 - 1
+                nuevo_y1 = int(round(self.y1 - m))
+        else:
+            # Línea diagonal hacia abajo a la izquierda
+            if m > 0 and self.y1 < self.y2:
+                nuevo_x2 = self.x2 - 1
+                nuevo_y2 = self.y2 + 1
+                nuevo_x1 = self.x1 + 1
+                nuevo_y1 = self.y1 - 1
+            # Línea diagonal hacia arriba a la izquierda
+            else:
+                nuevo_x2 = self.x2 - 1
+                nuevo_y2 = int(round(self.y2 - m))
+                nuevo_x1 = self.x1 + 1
+                nuevo_y1 = int(round(self.y1 + m))
+
+        # Actualizar los puntos de la línea
         self.x1 = nuevo_x1
         self.y1 = nuevo_y1
         self.x2 = nuevo_x2
         self.y2 = nuevo_y2
+
         # Devolver la matriz actualizada con la línea dibujada
         return self.dibujar()
 
     def disminuirLongitud(self):
-        m = int((self.y2 - self.y1) / (self.x2 - self.x1))
-        b = self.y1 - m * self.x1
-        nuevo_x2 = self.x2 - 1
-        nuevo_y2 = m * nuevo_x2 + b
-        nuevo_x1 = self.x1 + 1
-        nuevo_y1 = m * nuevo_x1 + b
+        # Verificar la pendiente de la línea
+        if self.x2 == self.x1:
+            m = 0
+        else:
+            m = (self.y2 - self.y1) / (self.x2 - self.x1)
 
+        # Verificar la dirección de la línea
+        if self.x1 < self.x2:
+            # Línea diagonal hacia arriba a la derecha
+            if m < 0 and self.y1 > self.y2:
+                nuevo_x2 = self.x2 - 1
+                nuevo_y2 = self.y2 + 1
+                nuevo_x1 = self.x1 + 1
+                nuevo_y1 = self.y1 - 1
+            # Línea diagonal hacia abajo a la derecha
+            else:
+                nuevo_x2 = self.x2 - 1
+                nuevo_y2 = int(round(self.y2 - m))
+                nuevo_x1 = self.x1 + 1
+                nuevo_y1 = int(round(self.y1 + m))
+        else:
+            # Línea diagonal hacia abajo a la izquierda
+            if m > 0 and self.y1 < self.y2:
+                nuevo_x2 = self.x2 + 1
+                nuevo_y2 = self.y2 - 1
+                nuevo_x1 = self.x1 - 1
+                nuevo_y1 = self.y1 + 1
+            # Línea diagonal hacia arriba a la izquierda
+            else:
+                nuevo_x2 = self.x2 + 1
+                nuevo_y2 = int(round(self.y2 + m))
+                nuevo_x1 = self.x1 - 1
+                nuevo_y1 = int(round(self.y1 - m))
+
+        # Actualizar los puntos de la línea
         self.x1 = nuevo_x1
         self.y1 = nuevo_y1
         self.x2 = nuevo_x2
@@ -79,6 +126,12 @@ class Linea:
 
         # Devolver la matriz actualizada con la línea dibujada
         return self.dibujar()
+
+
+
+
+
+
 
 
 # Crear ventana y canvas
@@ -87,7 +140,7 @@ canvas = tk.Canvas(ventana, width=400, height=400)
 canvas.pack()
 
 # Crear instancia de la clase Linea y obtener la matriz de coordenadas
-linea = Linea(20, 220, 200, 30)
+linea = Linea(18, 210, 234, 50)
 coords = linea.dibujar()
 print(coords)
 
@@ -108,8 +161,8 @@ linea_dibujada = canvas.create_line(coord_list, width=3)
     canvas.coords(linea_dibujada, coord_list)
 
     ventana.update()
-    time.sleep(1) """
-    
+    time.sleep(1)
+     """
 for i in range(100):
     # Aumentar la longitud de la línea
     coords = linea.disminuirLongitud()
