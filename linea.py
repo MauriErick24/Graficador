@@ -1,5 +1,6 @@
 import tkinter as tk
 import numpy as np
+import time
 class Linea:
     def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
@@ -16,16 +17,18 @@ class Linea:
         x = self.x1
         y = self.y1
 
-        # Matriz para almacenar las coordenadas de cada pixel
-        coords = np.zeros((2, dx + dy), dtype=int)
-        idx = 0
+        # Lista para almacenar las coordenadas de cada pixel
+        coords = []
 
-        while x != self.x2 or y != self.y2:
-            coords[0, idx] = x
-            coords[1, idx] = y
-            idx += 1
+        while True:
+            coords.append([x, y])
 
-            e2 = 2 * err
+            # Si llegamos al final de la línea, salir del loop
+            if x == self.x2 and y == self.y2:
+                break
+
+            # Calcular el error fraccional
+            e2 = err * 2
             if e2 > -dy:
                 err -= dy
                 x += sx
@@ -33,82 +36,82 @@ class Linea:
                 err += dx
                 y += sy
 
-        # Agregar las coordenadas del último pixel
-        coords[0, idx] = x
-        coords[1, idx] = y
-        idx += 1
-
         # Devolver la matriz de coordenadas
-        return coords[:, :idx]
+        return np.array(coords).T
 
-    def aumentaLongitud(self):
-        # Aumentar la longitud de la línea en 1 píxel en ambos extremos
-        if self.x1 < self.x2:
-            self.x1 -= 1
-            self.x2 += 1
-        else:
-            self.x1 += 1
-            self.x2 -= 1
-
-        if self.y1 < self.y2:
-            self.y1 -= 1
-            self.y2 += 1
-        else:
-            self.y1 += 1
-            self.y2 -= 1
-
-        # Actualizar los atributos con las nuevas coordenadas de los extremos de la línea
-        self.x1 = max(0, self.x1)
-        self.y1 = max(0, self.y1)
-        self.x2 = max(0, self.x2)
-        self.y2 = max(0, self.y2)
-
-        # Actualizar la matriz de coordenadas con las nuevas coordenadas de la línea
-        return self.dibujar()
+    def aumentarLongitud(self):
+         m = int((self.y2 - self.y1) / (self.x2 - self.x1))
+         b = self.y1 - m * self.x1
+         nuevo_x2 = self.x2 + 1
+         nuevo_y2 = m * nuevo_x2 + b
+         nuevo_x1 = self.x1 - 1            
+         nuevo_y1 = m * nuevo_x1 + b
+         
+         self.x1 = nuevo_x1
+         self.y1 = nuevo_y1
+         self.x2 = nuevo_x2
+         self.y2 = nuevo_y2
+        # Devolver la matriz actualizada con la línea dibujada
+         return self.dibujar()
 
     def disminuirLongitud(self):
-        # Disminuir la longitud de la línea en 1 píxel en ambos extremos
-        if self.x1 < self.x2:
-            self.x1 += 1
-            self.x2 -= 1
-        else:
-            self.x1 -= 1
-            self.x2 += 1
+        m = int((self.y2 - self.y1) / (self.x2 - self.x1))
+        b = self.y1 - m * self.x1
+        nuevo_x2 = self.x2 - 1
+        nuevo_y2 = m * nuevo_x2 + b
+        nuevo_x1 = self.x1 + 1
+        nuevo_y1 = m * nuevo_x1 + b
 
-        if self.y1 < self.y2:
-            self.y1 += 1
-            self.y2 -= 1
-        else:
-            self.y1 -= 1
-            self.y2 += 1
+        self.x1 = nuevo_x1
+        self.y1 = nuevo_y1
+        self.x2 = nuevo_x2
+        self.y2 = nuevo_y2
 
-        # Actualizar los atributos con las nuevas coordenadas de los extremos de la línea
-        self.x1 = max(0, self.x1)
-        self.y1 = max(0, self.y1)
-        self.x2 = max(0, self.x2)
-        self.y2 = max(0, self.y2)
-
-        # Actualizar la matriz de coordenadas con las nuevas coordenadas de la línea
+        # Devolver la matriz actualizada con la línea dibujada
         return self.dibujar()
 
-#matriz de dibujar
-linea = Linea(50,20,145,100)
-coordenadasDibujo=linea.dibujar()
-print(coordenadasDibujo)
 
- #matriz que aumenta el tamanio cada que se llama al metodo aumentarLongitud()
-""" print("Coordenadas modificadas para aumentar la longitud")
-nuevasCoordenadas = linea.aumentaLongitud()
-print(nuevasCoordenadas)
-nuevasCoordenadas = linea.aumentaLongitud()
-print(nuevasCoordenadas) """ 
+# Crear ventana y canvas
+ventana = tk.Tk()
+canvas = tk.Canvas(ventana, width=400, height=400)
+canvas.pack()
 
-#matriz que reduce el tamanio cada que se llama al metodo disminuirLongitud()
-print("Coordenadas modificadas para disminuir la longitud")
-nuevasCoordenadas = linea.disminuirLongitud()
-print(nuevasCoordenadas)
-nuevasCoordenadas = linea.disminuirLongitud()
-print(nuevasCoordenadas)
+# Crear instancia de la clase Linea y obtener la matriz de coordenadas
+linea = Linea(20, 25, 80, 100)
+coords = linea.dibujar()
+print(coords)
 
+# Crear una lista de pares de coordenadas a partir de la matriz
+coord_list = [[coords[0][i], coords[1][i]] for i in range(len(coords[0]))]
 
+# Dibujar la línea en el canvas
+linea_dibujada = canvas.create_line(coord_list, width=3)
 
+""" for i in range(100):
+    # Aumentar la longitud de la línea
+    coords = linea.aumentarLongitud()
+
+    # Obtener la nueva lista de coordenadas
+    coord_list = coords.T.flatten().tolist()
+
+    # Actualizar la línea dibujada en el canvas
+    canvas.coords(linea_dibujada, coord_list)
+
+    ventana.update()
+    time.sleep(1) """
+    
+for i in range(100):
+    # Aumentar la longitud de la línea
+    coords = linea.disminuirLongitud()
+
+    # Obtener la nueva lista de coordenadas
+    coord_list = coords.T.flatten().tolist()
+
+    # Actualizar la línea dibujada en el canvas
+    canvas.coords(linea_dibujada, coord_list)
+
+    ventana.update()
+    time.sleep(1) 
+
+# Iniciar el loop de la ventana
+ventana.mainloop() 
