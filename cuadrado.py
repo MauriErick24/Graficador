@@ -1,4 +1,5 @@
 import tkinter as tk
+import time
 class Cuadrado:
     def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
@@ -6,7 +7,7 @@ class Cuadrado:
         self.x2 = x2
         self.y2 = y2
 
-    def dibujar_cuadrado(self):
+    def dibujar(self):
         dx = abs(self.x2 - self.x1)
         dy = abs(self.y2 - self.y1)
         lado = min(dx, dy)
@@ -33,6 +34,7 @@ class Cuadrado:
             self.y1 -= 1
             self.x2 += 1
             self.y2 += 1
+            return self.dibujar()
             
     def reducir(self):
             dx = abs(self.x2 - self.x1)
@@ -60,16 +62,51 @@ class Cuadrado:
             self.y1 += 1
             self.x2 -= 1
             self.y2 -= 1
-            
-#Crear un objeto Cuadrado con las coordenadas de dos vértices opuestos
-cuadrado = Cuadrado(50, 50, 250, 250)
+            return self.dibujar()
+        
+    def moverDerecha(self):
+        self.x1 += 3
+        self.x2 += 3
+        return self.dibujar()
 
-#Obtener las coordenadas del cuadrado
-coords = cuadrado.dibujar_cuadrado()
-print(coords)
-#Dibujar el cuadrado en una ventana de Tkinter
+    def moverIzquierda(self):
+        self.x1 -= 3
+        self.x2 -= 3
+        return self.dibujar()
+
+    def moverAbajo(self):
+        self.y1 += 3
+        self.y2 += 3
+        return self.dibujar()
+
+    def moverArriba(self):
+        self.y1 -= 3
+        self.y2 -= 3
+        return self.dibujar()
+            
+# Crear un objeto Cuadrado con las coordenadas de dos vértices opuestos
+cuadrado = Cuadrado(90, 90, 200, 200)
+
+# Dibujar el cuadrado en una ventana de Tkinter
 ventana = tk.Tk()
-canvas = tk.Canvas(ventana, width=300, height=300)
+canvas = tk.Canvas(ventana, width=600, height=600)
 canvas.pack()
-canvas.create_polygon(coords, outline='black', fill='')
+
+# Dibujar el primer cuadrado
+coords = cuadrado.dibujar()
+cuadrado_id = canvas.create_polygon(coords, outline='black', fill='')
+
+for i in range(100):
+    # Borrar el cuadrado anterior
+    canvas.delete(cuadrado_id)
+
+    # Obtener las nuevas coordenadas del cuadrado
+    coords = cuadrado.moverIzquierda()
+
+    # Dibujar el nuevo cuadrado
+    cuadrado_id = canvas.create_polygon(coords, outline='black', fill='')
+
+    ventana.update()
+    time.sleep(0.1)
+
 ventana.mainloop()
