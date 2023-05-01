@@ -1,12 +1,15 @@
 import tkinter as tk
 import numpy as np
 import time
+import math
 class Linea:
     def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
         self.y1 = y1
         self.x2 = x2
         self.y2 = y2
+        self.angulo = 0
+
 
     def dibujar(self):
         dx = abs(self.x2 - self.x1)
@@ -128,53 +131,35 @@ class Linea:
         return self.dibujar()
 
     def rotar(self):
-        # Verificar la pendiente de la línea
-        if self.x2 == self.x1:
-            m = 0
-        else:
-            m = (self.y2 - self.y1) / (self.x2 - self.x1)
+        # Calcular el punto medio de la línea
+        cx = (self.x1 + self.x2) / 2
+        cy = (self.y1 + self.y2) / 2
 
-        # Verificar la dirección de la línea
-        if self.x1 < self.x2:
-            # Línea diagonal hacia arriba a la derecha
-            if m < 0 and self.y1 > self.y2:
-                nuevo_x2 = self.x2
-                nuevo_y2 = self.y2 + 1
-                nuevo_x1 = self.x1
-                nuevo_y1 = self.y1
-            # Línea diagonal hacia abajo a la derecha
-            elif m > 0 and self.y1 < self.y2:
-                nuevo_x2 = self.x2
-                nuevo_y2 = int(round(self.y2 - m))
-                nuevo_x1 = self.x1
-                nuevo_y1 = int(round(self.y1 + m))
-            else:
-                nuevo_x2 = self.x2 - 1
-                nuevo_y2 = self.y2 + 1
-                nuevo_x1 = self.x1
-                nuevo_y1 = self.y1
-        else:
-            # Línea diagonal hacia abajo a la izquierda
-            if m > 0 and self.y1 < self.y2:
-                nuevo_x2 = self.x2
-                nuevo_y2 = self.y2 - 1
-                nuevo_x1 = self.x1
-                nuevo_y1 = self.y1
-            # Línea diagonal hacia arriba a la izquierda
-            else:
-                nuevo_x2 = self.x2
-                nuevo_y2 = int(round(self.y2 + m))
-                nuevo_x1 = self.x1
-                nuevo_y1 = int(round(self.y1 - m))
+        # Calcular las coordenadas de los extremos de la línea rotada
+        dx1 = self.x1 - cx
+        dy1 = self.y1 - cy
+        dx2 = self.x2 - cx
+        dy2 = self.y2 - cy
+        angulo_rad = math.radians(self.angulo)
+        coseno = math.cos(angulo_rad)
+        seno = math.sin(angulo_rad)
+        nuevo_dx1 = dx1 * coseno - dy1 * seno
+        nuevo_dy1 = dx1 * seno + dy1 * coseno
+        nuevo_dx2 = dx2 * coseno - dy2 * seno
+        nuevo_dy2 = dx2 * seno + dy2 * coseno
 
         # Actualizar los puntos de la línea
-        self.x1 = nuevo_x1
-        self.y1 = nuevo_y1
-        self.x2 = nuevo_x2
-        self.y2 = nuevo_y2
+        self.x1 = int(round(cx + nuevo_dx1))
+        self.y1 = int(round(cy + nuevo_dy1))
+        self.x2 = int(round(cx + nuevo_dx2))
+        self.y2 = int(round(cy + nuevo_dy2))
+
+        # Actualizar el ángulo de rotación
+        self.angulo += 3
 
         # Devolver la matriz actualizada con la línea dibujada
         return self.dibujar()
+
 
 
     def moverDerecha(self):
@@ -208,7 +193,7 @@ canvas = tk.Canvas(ventana, width=400, height=400)
 canvas.pack()
 
 # Crear instancia de la clase Linea y obtener la matriz de coordenadas
-linea = Linea(150, 125, 230, 250)
+linea = Linea(50, 20, 200, 150)
 coords = linea.dibujar()
 print(coords)
 
@@ -257,9 +242,9 @@ linea_dibujada = canvas.create_line(coord_list, width=3)
     ventana.update()
     time.sleep(1)  """
     
-for i in range(100):
+for i in range(30):
     # Aumentar la longitud de la línea
-    coords = linea.moverAbajo()
+    coords = linea.rotar()
 
     # Obtener la nueva lista de coordenadas
     coord_list = coords.T.flatten().tolist()
