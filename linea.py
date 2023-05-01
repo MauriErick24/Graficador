@@ -177,6 +177,25 @@ class Linea:
         return self.dibujar()
 
 
+    def moverDerecha(self):
+        self.x1 += 3
+        self.x2 += 3
+        return self.dibujar()
+
+    def moverIzquierda(self):
+        self.x1 -= 3
+        self.x2 -= 3
+        return self.dibujar()
+
+    def moverAbajo(self):
+        self.y1 += 3
+        self.y2 += 3
+        return self.dibujar()
+
+    def moverArriba(self):
+        self.y1 -= 3
+        self.y2 -= 3
+        return self.dibujar()
 
 
 
@@ -189,7 +208,7 @@ canvas = tk.Canvas(ventana, width=400, height=400)
 canvas.pack()
 
 # Crear instancia de la clase Linea y obtener la matriz de coordenadas
-linea = Linea(25, 25, 230, 250)
+linea = Linea(150, 125, 230, 250)
 coords = linea.dibujar()
 print(coords)
 
@@ -225,9 +244,22 @@ linea_dibujada = canvas.create_line(coord_list, width=3)
     ventana.update()
     time.sleep(1)  """
     
-for i in range(100):
+""" for i in range(100):
     # Aumentar la longitud de la línea
     coords = linea.rotar()
+
+    # Obtener la nueva lista de coordenadas
+    coord_list = coords.T.flatten().tolist()
+
+    # Actualizar la línea dibujada en el canvas
+    canvas.coords(linea_dibujada, coord_list)
+
+    ventana.update()
+    time.sleep(1)  """
+    
+for i in range(100):
+    # Aumentar la longitud de la línea
+    coords = linea.moverAbajo()
 
     # Obtener la nueva lista de coordenadas
     coord_list = coords.T.flatten().tolist()
