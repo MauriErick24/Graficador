@@ -1,6 +1,7 @@
 import numpy as np
 import tkinter as tk
-
+import time
+import math
 class Triangulo:
     def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
@@ -75,12 +76,36 @@ class Triangulo:
         self.y1 -= 1
         self.x2 += 1
         self.y2 += 1
+        return self.dibujar()
+
 
     def reducir(self):
         self.x1 += 1
         self.y1 += 1
         self.x2 -= 1
         self.y2 -= 1
+        return self.dibujar()
+    
+    def moverDerecha(self):
+        self.x1 += 3
+        self.x2 += 3
+        return self.dibujar()
+
+    def moverIzquierda(self):
+        self.x1 -= 3
+        self.x2 -= 3
+        return self.dibujar()
+
+    def moverAbajo(self):
+        self.y1 += 3
+        self.y2 += 3
+        return self.dibujar()
+
+    def moverArriba(self):
+        self.y1 -= 3
+        self.y2 -= 3
+        return self.dibujar()
+
 
 #Los puntos para usar create_polygon no se pasa en matricez
 # Crear un objeto Triangulo con las coordenadas de dos vértices opuestos
@@ -89,22 +114,28 @@ triangulo = Triangulo(90, 90, 200, 200)
 # Obtener las coordenadas del triángulo equilátero
 coords = triangulo.dibujar()
 print(coords)
-print("Triangulo aumentado")
-# Aumentar el tamaño del triángulo y se vuelve a dibujar
-triangulo.aumentar()
-coords = triangulo.dibujar()
-print(coords)
-
-#Reducir el tamaño del triangulo y volver a dibujar
-print("Triangulo reducido")
-triangulo.reducir()
-coords = triangulo.dibujar()
-print(coords)
 
 # Dibujar el triángulo en una ventana de Tkinter
 ventana = tk.Tk()
 canvas = tk.Canvas(ventana, width=300, height=300)
 canvas.pack()
-canvas.create_polygon(coords, outline='black', fill='')
+
+# Dibujar el primer triángulo
+coords = triangulo.dibujar()
+triangulo_id = canvas.create_polygon(coords, outline='black', fill='')
+
+for i in range(100):
+    # Borrar el triángulo anterior
+    canvas.delete(triangulo_id)
+
+    # Obtener las nuevas coordenadas del triángulo
+    coords = triangulo.moverAbajo()
+
+    # Dibujar el nuevo triángulo
+    triangulo_id = canvas.create_polygon(coords, outline='black')
+
+    ventana.update()
+    time.sleep(1)
+
 ventana.mainloop()
 
