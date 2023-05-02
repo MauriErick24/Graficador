@@ -8,26 +8,38 @@ class Cuadrado:
         self.y2 = y2
 
     def dibujar(self):
+        # Calcula la diferencia en x y y
         dx = abs(self.x2 - self.x1)
         dy = abs(self.y2 - self.y1)
+        
+        # Encuentra el tamaño del lado más corto
         lado = min(dx, dy)
+        
+        # Encuentra las coordenadas del extremo opuesto del lado más corto
         x2 = self.x1 + lado
         y2 = self.y1 + lado
         
         coords = []
-        # Linea de x1, y1 a x2, y1
+        
+        # Linea de x1, y1 a x2, y1 usando el algoritmo simple de línea
         for x in range(self.x1, x2+1):
             coords.append((x, self.y1))
-        # Linea de x2, y1 a x2, y2
+        
+        # Linea de x2, y1 a x2, y2 usando el algoritmo simple de línea
         for y in range(self.y1, y2+1):
             coords.append((x2, y))
-        # Linea de x2, y2 a x1, y2
+        
+        # Linea de x2, y2 a x1, y2 usando el algoritmo simple de línea
         for x in range(x2, self.x1-1, -1):
             coords.append((x, y2))
-        # Linea de x1, y2 a x1, y1
+        
+        # Linea de x1, y2 a x1, y1 usando el algoritmo simple de línea
         for y in range(y2, self.y1-1, -1):
             coords.append((self.x1, y))
+            
+        # Devuelve las coordenadas resultantes
         return coords
+
 
     def aumentar(self):
             self.x1 -= 1
@@ -101,7 +113,7 @@ for i in range(100):
     canvas.delete(cuadrado_id)
 
     # Obtener las nuevas coordenadas del cuadrado
-    coords = cuadrado.moverIzquierda()
+    coords = cuadrado.aumentar()
 
     # Dibujar el nuevo cuadrado
     cuadrado_id = canvas.create_polygon(coords, outline='black', fill='')
