@@ -1,7 +1,10 @@
 import tkinter as tk
 from tkinter import *
+from tkinter.colorchooser import askcolor
 import linea
 import triangulo
+import circulo
+import cuadrado
 
 class PaintApp:
     global canvas 
@@ -12,6 +15,9 @@ class PaintApp:
     global line
     global triangle
     global selection 
+    global circle 
+    global square
+    global fill_color
 
     def __init__(self, master):
         self.master = master
@@ -21,6 +27,10 @@ class PaintApp:
         self.line = 0
         self.selection = 0
         self.triangle = 0
+        self.circle = 0
+        self.square = 0
+        self.fill_color = ''
+
         # Frame para botones
         self.button_frame = tk.Frame(master)
         self.button_frame.pack(side="top", fill="x", padx=10, pady=10)
@@ -31,9 +41,9 @@ class PaintApp:
         self.line_button = tk.Button(self.button_frame, text="Línea",command=self.button_click_line)
         self.line_button.pack(side="left", padx=5)
         
-        self.square_button = tk.Button(self.button_frame, text="Cuadrado", command=self.draw_square)
+        self.square_button = tk.Button(self.button_frame, text="Cuadrado", command=self.button_click_square)
         self.square_button.pack(side="left", padx=5)
-        self.circle_button = tk.Button(self.button_frame, text="Círculo", command=self.draw_circle)
+        self.circle_button = tk.Button(self.button_frame, text="Círculo", command=self.button_click_circle)
         self.circle_button.pack(side="left", padx=5)
         self.triangle_button = tk.Button(self.button_frame, text="Triángulo", command=self.button_click_triangle)
         self.triangle_button.pack(side="left", padx=5)
@@ -70,6 +80,7 @@ class PaintApp:
 
  ############################ Linea ##############################################   
     def button_click_line(self):
+         self.fill_color = ''
          self.canvas.bind("<Button-1>", self.canvas_click_line)
 
     def canvas_click_line(self, event):
@@ -88,16 +99,19 @@ class PaintApp:
     def draw_line(self):
         self.painting = 1
         self.line = linea.Linea(self.x1,self.y1,self.x2,self.y2)
-        pointLines = self.line.dibujar()
-        for i in range(len(pointLines[0])):
-            print("Coordenadas x, y: ({}, {})".format(pointLines[0][i], pointLines[1][i]))
-            cordx = pointLines[0][i]
-            cordy = pointLines[1][i]
-            self.canvas.create_rectangle(cordx, cordy, cordx+1, cordy+1, fill="black")
+        self.pointLines = self.line.dibujar()
+        coord_list = [[  self.pointLines[0][i],   self.pointLines[1][i]] for i in range(len(  self.pointLines[0]))]
+        self.linea_dibujada = self.canvas.create_line(coord_list, width=self.width_scale.get())
+        # for i in range(len(pointLines[0])):
+        #     print("Coordenadas x, y: ({}, {})".format(pointLines[0][i], pointLines[1][i]))
+        #     cordx = pointLines[0][i]
+        #     cordy = pointLines[1][i]
+        #     self.canvas.create_rectangle(cordx, cordy, cordx+1, cordy+1, fill="black")
 #############################################################################################
 
  ############################ Triangulo ##############################################   
     def button_click_triangle(self):
+         self.fill_color = ''
          self.canvas.bind("<Button-1>", self.canvas_click_triangle)
 
     def canvas_click_triangle(self, event):
@@ -117,17 +131,70 @@ class PaintApp:
         self.painting = 1
         self.triangle = triangulo.Triangulo(self.x1,self.y1,self.x2,self.y2)
         points = self.triangle.dibujar()
-        self.canvas.create_polygon(points, outline='black', fill='')
-
+        self.triangulo_dibujado = self.canvas.create_polygon(points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
+        #self.canvas.create_line(points, width=self.width_scale.get())
 #############################################################################################
 
+############################ Circulo ##############################################   
+    def button_click_circle(self):
+         self.fill_color = ''
+         self.canvas.bind("<Button-1>", self.canvas_click_circulo)
 
-        pass
-    def draw_square(self):
-        pass
+    def canvas_click_circulo(self, event):
+       if(self.flag == 0):
+            self.x1 = event.x
+            self.y1 = event.y
+            print("Coordenadas 1 del clic: ({}, {})".format(self.x1, self.y1))
+            self.flag = 1
+       elif(self.flag == 1):   
+            self.x2 = event.x
+            self.y2 = event.y
+            print("Coordenadas 2 del clic: ({}, {})".format(self.x2, self.y2))
+            self.flag = 0
+            self.draw_circle()
 
     def draw_circle(self):
+        self.painting = 1
+        self.circle = circulo.Circuferencia(self.x1,self.y1,self.x2,self.y2, self.width_scale.get(),self.segment_scale.get())
+        points = self.circle.getPoints()
+        self.canvas.create_polygon(points, outline='black', fill=self.fill_color)
+        #self.canvas.create_line(points, width=self.width_scale.get())
+
+#############################################################################################
         pass
+ 
+############################ Cuadrado ##############################################   
+    def button_click_square(self):
+         self.fill_color = ''
+         self.canvas.bind("<Button-1>", self.canvas_click_square)
+
+    def canvas_click_square(self, event):
+       if(self.flag == 0):
+            self.x1 = event.x
+            self.y1 = event.y
+            print("Coordenadas 1 del clic: ({}, {})".format(self.x1, self.y1))
+            self.flag = 1
+       elif(self.flag == 1):   
+            self.x2 = event.x
+            self.y2 = event.y
+            print("Coordenadas 2 del clic: ({}, {})".format(self.x2, self.y2))
+            self.flag = 0
+            self.draw_square()
+
+    def draw_square(self):
+        self.painting = 1
+        self.square = cuadrado.Cuadrado(self.x1,self.y1,self.x2,self.y2)
+        points = self.square.dibujar_cuadrado()
+        self.canvas.create_polygon(points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
+
+#############################################################################################
+ 
+ 
+    # def draw_square(self):
+    #     pass
+
+    # def draw_circle(self):
+    #     pass
 
     # def draw_triangle(self):
     #     pass
@@ -138,9 +205,11 @@ class PaintApp:
     def clear_canvas(self):
         self.painting = 0
         self.canvas.delete("all")
-        pass
 
     def choose_color(self):
+        get_fill_color = askcolor()[1]
+        self.fill_color = get_fill_color
+        #self.canvas.itemconfig(self.current_shape, fill=self.fill_color)
         pass
 
 
@@ -158,23 +227,22 @@ class PaintApp:
     def key_press_line(self,event):
         if(self.painting == 1):
             print("Se ha presionado la tecla '{}'".format(event.keysym))
-            pointLines = self.line.cambiarLongitud()
-        for i in range(len(pointLines[0])):
-            cordx = pointLines[0][i]
-            cordy = pointLines[1][i]
-            self.canvas.create_rectangle(cordx, cordy, cordx+1, cordy+1, fill="black")
-
+            pointLines = self.line.aumentarLongitud()
+            coord_list = pointLines.T.flatten().tolist()
+            #cordx = pointLines[0][i]
+            #cordy = pointLines[1][i]
+            #self.canvas.create_rectangle(cordx, cordy, cordx+1, cordy+1, fill="black")
+            self.canvas.coords(self.linea_dibujada, coord_list)
+            self.canvas.update()
     def key_press_triangle(self,event):
         if(self.painting == 1):
             print("Se ha presionado la tecla '{}'".format(event.keysym))
             pointLines = self.triangle.aumentar()
             pointLines = self.triangle.dibujar()
-            self.canvas.create_polygon(pointLines, outline='black', fill='')
-            
-        
 
-
-
+            # self.canvas.coords(self.triangulo_dibujado , pointLines)
+             
+            self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
 root = tk.Tk()
 app = PaintApp(root)
 root.mainloop()
