@@ -87,6 +87,7 @@ class Linea:
 
         # Devolver la matriz actualizada con la línea dibujada
         return self.dibujar()
+
     def disminuirLongitud(self):
         # Verificar la pendiente de la línea
         if self.x2 == self.x1:

@@ -250,6 +250,7 @@ class PaintApp:
             if(self.figure==1):
                 if event.keysym == 'r':
                     print("Se ha presionado la tecla '{}'".format(event.char))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.rotar()
                     coord_list = pointLines.T.flatten().tolist()
             
@@ -260,6 +261,7 @@ class PaintApp:
                     self.canvas.update()
                 elif event.keysym == 'q':
                     print("Se ha presionado la tecla '{}'".format(event.keysym))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.aumentarLongitud()
                     coord_list = pointLines.T.flatten().tolist()
                     if self.segment_scale.get() > 1:
@@ -269,6 +271,7 @@ class PaintApp:
                     self.canvas.update()
                 elif event.keysym == 'w':
                     print("Se ha presionado la tecla '{}'".format(event.keysym))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.disminuirLongitud()
                     coord_list = pointLines.T.flatten().tolist()
                     if self.segment_scale.get() > 1:
@@ -278,6 +281,7 @@ class PaintApp:
                     self.canvas.update()
                 elif event.keysym == 'Up':
                     print("Se ha presionado la tecla '{}'".format(event.keysym))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.moverArriba()
                     coord_list = pointLines.T.flatten().tolist()
                     if self.segment_scale.get() > 1:
@@ -287,6 +291,7 @@ class PaintApp:
                     self.canvas.update()
                 elif event.keysym == 'Down':
                     print("Se ha presionado la tecla '{}'".format(event.keysym))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.moverAbajo()
                     coord_list = pointLines.T.flatten().tolist()
                     if self.segment_scale.get() > 1:
@@ -296,6 +301,7 @@ class PaintApp:
                     self.canvas.update()
                 elif event.keysym == 'Left':
                     print("Se ha presionado la tecla '{}'".format(event.keysym))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.moverIzquierda()
                     coord_list = pointLines.T.flatten().tolist()
                     if self.segment_scale.get() > 1:
@@ -305,6 +311,7 @@ class PaintApp:
                     self.canvas.update()
                 elif event.keysym == 'Right':
                     print("Se ha presionado la tecla '{}'".format(event.keysym))
+                    self.canvas.delete(self.linea_dibujada)
                     pointLines = self.line.moverDerecha()
                     coord_list = pointLines.T.flatten().tolist()
                     if self.segment_scale.get() > 1:
@@ -434,8 +441,7 @@ class PaintApp:
                     else:
                         self.cuadrado_dibujado=self.canvas.create_polygon(points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
                     self.canvas.update() 
-
-                     
+                    
     """ def key_press_square(self,event):
         if(self.painting == 1):
             print("Se ha presionado la tecla '{}'".format(event.keysym))
