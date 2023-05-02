@@ -19,6 +19,7 @@ class PaintApp:
     global square
     global fill_color
     global figure
+    global points
 
     def __init__(self, master):
         self.master = master
@@ -32,6 +33,7 @@ class PaintApp:
         self.square = 0
         self.fill_color = ''
         self.figure = 0
+        self.points = 0
 
         # Frame para botones
         self.button_frame = tk.Frame(master)
@@ -77,8 +79,12 @@ class PaintApp:
         # Lienzo para dibujar
         self.canvas = tk.Canvas(master, width=800, height=480, bg="white")
         self.canvas.pack(side="bottom", fill="both", expand=True, padx=10, pady=10)
-        master.bind("<s>", self.key_press_line)
-        master.bind("<t>", self.key_press_triangle)
+        master.bind("<s>", self.key_press_size)
+
+        master.bind("<Right>",self.key_press_right)
+        master.bind("<Left>",self.key_press_left)
+        master.bind("<Up>",self.key_press_up)
+        master.bind("<Down>",self.key_press_down)
 
  ############################ Linea ##############################################   
     def button_click_line(self):
@@ -134,8 +140,8 @@ class PaintApp:
     def draw_triangle(self):
         self.painting = 1
         self.triangle = triangulo.Triangulo(self.x1,self.y1,self.x2,self.y2)
-        points = self.triangle.dibujar()
-        self.triangulo_dibujado = self.canvas.create_polygon(points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
+        self.points = self.triangle.dibujar()
+        self.triangulo_dibujado = self.canvas.create_polygon(self.points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
         #self.canvas.create_line(points, width=self.width_scale.get())
 #############################################################################################
 
@@ -190,8 +196,8 @@ class PaintApp:
     def draw_square(self):
         self.painting = 1
         self.square = cuadrado.Cuadrado(self.x1,self.y1,self.x2,self.y2)
-        points = self.square.dibujar_cuadrado()
-        self.canvas.create_polygon(points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
+        self.points = self.square.dibujar_cuadrado()
+        self.canvas.create_polygon(self.points, outline='black', fill=self.fill_color,  width=self.width_scale.get())
 
 #############################################################################################
 
@@ -218,7 +224,7 @@ class PaintApp:
         pass
 ###############################################################
 
-    def key_press_line(self,event):
+    def key_press_size(self,event):
         if(self.painting == 1):
             print("Figura: '{}, {}'".format(event.keysym, self.figure))
             if(self.figure == 1):
@@ -230,23 +236,87 @@ class PaintApp:
                 pointLines = self.triangle.aumentar()
                 pointLines = self.triangle.dibujar()            
                 self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
+            elif(self.figure == 4):
+                pass
             self.canvas.update()
 
-    # def key_press_line(self,event):
-    #     if(self.painting == 1):
-    #         print("Se ha presionado la tecla '{}'".format(event.keysym))
-    #         pointLines = self.line.aumentarLongitud()
-    #         coord_list = pointLines.T.flatten().tolist()
-    #         self.canvas.coords(self.linea_dibujada, coord_list)
-    #         self.canvas.update()
-
-
-    def key_press_triangle(self,event):
+    def key_press_right(self,event):
+         if(self.painting == 1):
+            print("Figura: '{}, {}'".format(event.keysym, self.figure))
+            if(self.figure == 1):
+                pointLines = self.line.moverDerecha()
+                coord_list = pointLines.T.flatten().tolist()
+                self.canvas.coords(self.linea_dibujada, coord_list)
+                pass
+            elif(self.figure == 2):
+                self.triangulo_dibujado = self.canvas.create_polygon(self.points, outline='white', fill=self.fill_color,  width=self.width_scale.get())
+                print("Figura: '{}, {}'".format(event.keysym, self.figure))
+                pointLines = self.triangle.moverDerecha()
+                pointLines = self.triangle.dibujar() 
+                self.points = pointLines           
+                self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
+            elif(self.figure == 4):
+                pass
+            self.canvas.update()
+    
+    def key_press_left(self,event):
         if(self.painting == 1):
-            print("Se ha presionado la tecla '{}'".format(event.keysym))
-            pointLines = self.triangle.aumentar()
-            pointLines = self.triangle.dibujar()            
-            self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
+            print("Figura: '{}, {}'".format(event.keysym, self.figure))
+            if(self.figure == 1):
+                pointLines = self.line.moverIzquierda()
+                coord_list = pointLines.T.flatten().tolist()
+                self.canvas.coords(self.linea_dibujada, coord_list)
+                pass
+            elif(self.figure == 2):
+                self.triangulo_dibujado = self.canvas.create_polygon(self.points, outline='white', fill=self.fill_color,  width=self.width_scale.get())
+                print("Figura: '{}, {}'".format(event.keysym, self.figure))
+                pointLines = self.triangle.moverIzquierda()
+                pointLines = self.triangle.dibujar() 
+                self.points = pointLines           
+                self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
+            elif(self.figure == 4):
+                pass
+            self.canvas.update()
+    
+    def key_press_up(self,event):
+        if(self.painting == 1):
+            print("Figura: '{}, {}'".format(event.keysym, self.figure))
+            if(self.figure == 1):
+                pointLines = self.line.moverArriba()
+                coord_list = pointLines.T.flatten().tolist()
+                self.canvas.coords(self.linea_dibujada, coord_list)
+                pass
+            elif(self.figure == 2):
+                self.triangulo_dibujado = self.canvas.create_polygon(self.points, outline='white', fill=self.fill_color,  width=self.width_scale.get())
+                print("Figura: '{}, {}'".format(event.keysym, self.figure))
+                pointLines = self.triangle.moverArriba()
+                pointLines = self.triangle.dibujar() 
+                self.points = pointLines           
+                self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
+            elif(self.figure == 4):
+                pass
+            self.canvas.update()
+
+    def key_press_down(self,event):
+        if(self.painting == 1):
+            print("Figura: '{}, {}'".format(event.keysym, self.figure))
+            if(self.figure == 1):
+                pointLines = self.line.moverAbajo()
+                coord_list = pointLines.T.flatten().tolist()
+                self.canvas.coords(self.linea_dibujada, coord_list)
+                pass
+            elif(self.figure == 2):
+                self.triangulo_dibujado = self.canvas.create_polygon(self.points, outline='white', fill=self.fill_color,  width=self.width_scale.get())
+                print("Figura: '{}, {}'".format(event.keysym, self.figure))
+                pointLines = self.triangle.moverAbajo()
+                pointLines = self.triangle.dibujar() 
+                self.points = pointLines           
+                self.canvas.create_polygon(pointLines, outline='black', fill=self.fill_color)
+            elif(self.figure == 4):
+                pass
+            self.canvas.update()
+        pass
+
 root = tk.Tk()
 app = PaintApp(root)
 root.mainloop()

@@ -82,8 +82,28 @@ class Triangulo:
         self.x2 -= 1
         self.y2 -= 1
 
-#Los puntos para usar create_polygon no se pasa en matricez
-# Crear un objeto Triangulo con las coordenadas de dos vértices opuestos
+    def moverDerecha(self):
+        self.x1 += 3
+        self.x2 += 3
+        return self.dibujar()
+    
+    def moverIzquierda(self):
+        self.x1 -= 3
+        self.x2 -= 3
+        return self.dibujar()
+
+    def moverAbajo(self):
+        self.y1 += 3
+        self.y2 += 3
+        return self.dibujar()
+
+    def moverArriba(self):
+        self.y1 -= 3
+        self.y2 -= 3
+        return self.dibujar()
+
+# #Los puntos para usar create_polygon no se pasa en matricez
+# #Crear un objeto Triangulo con las coordenadas de dos vértices opuestos
 # triangulo = Triangulo(90, 90, 200, 200)
 
 # # Obtener las coordenadas del triángulo equilátero
