@@ -23,7 +23,8 @@ class circuferencia:
         p0=1-radio
         puntomedioy=int((pyf+pyi)/2)
         xi=0
-        yi=radio
+        rx=radio
+        yi=round(radio)
         contador=separado
         self.iniciox=puntomediox-radio
         self.finx=puntomediox+radio
@@ -63,14 +64,9 @@ class circuferencia:
             else:
                 contador+=1;
                 
-            if(p0<0):
-               
-                p0=p0+2*xi+2+1
-                xi=xi+1
-            else:
-                p0=p0+2*xi+2+1-(2*yi-2)
-                xi=xi+1
-                yi=yi-1
+            rx=rx-xi/rx
+            yi=round(rx)
+            xi=xi+1
         partb.reverse()
         partc.reverse()
         parte.reverse()
@@ -113,7 +109,7 @@ class circuferencia:
         cv2.destroyAllWindows()
     def crearMatriz(self):
         tam=self.tamMax
-        tam=tam+10
+        tam=200+10
         self.matrizCircuferencia=numpy.ones((tam,tam,3),numpy.uint8)*255
         
         color=[0,0,0]# hay poner color primeramente 
@@ -128,10 +124,10 @@ class circuferencia:
             self.matrizCircuferencia[x][y]=color
     
                 
-nc=circuferencia(100,50,100,100,1,1)
+nc=circuferencia(100,50,100,100,2,1)
 print()
 #print(nc.getPoints())
-#nc.pintar()
+nc.pintar()
 print(nc.getPoints())
 #nc.pintarScanLine();
 #nc.pintar()
